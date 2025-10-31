@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HostelPro - Hostel Management System</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'css/style.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <span class="logo-text">H-M-S</span>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </li>
+                
+                <li class="nav-item" data-page="students">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Students</span>
+                </li>
+                <li class="nav-item" data-page="rooms">
+                    <i class="fas fa-bed"></i>
+                    <span>Rooms</span>
+                </li>
+                <li class="nav-item" data-page="staff">
+                    <i class="fas fa-users"></i>
+                    <span>Staff</span>
+                </li>
+                <li class="nav-item" data-page="fees">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Fees</span>
+                </li>
+                <li class="nav-item" data-page="allocations">
+                    <i class="fas fa-key"></i>
+                    <span>Allocations</span>
+                </li>
+                <li class="nav-item" data-page="visitors">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Visitors</span>
+                </li>
+                <li class="nav-item" data-page="maintenance">
+                    <i class="fas fa-tools"></i>
+                    <span>Maintenance</span>
+                </li>
+                <li class="nav-item" data-page="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <button class="btn-primary" id="addStudentBtn">
+                    <i class="fas fa-plus"></i>
+                    Add Student
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Overview of hostel operations</p>
+                </div>
+                <div class="header-right">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://via.placeholder.com/40" alt="Admin" class="profile-img">
+                        <div class="profile-info">
+                            <span class="profile-name">Admin</span>
+                            <span class="profile-email">admin@hostelpro.com</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div id="dashboard" class="page-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number" id="totalStudents">0</h3>
+                            <p class="stat-label">Total Students</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number" id="totalRooms">0</h3>
+                            <p class="stat-label">Total Rooms</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number" id="totalBlocks">0</h3>
+                            <p class="stat-label">Total Blocks</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-number" id="totalStaff">0</h3>
+                            <p class="stat-label">Total Staff</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="content-panel">
+                        <h3>Room Status</h3>
+                        <div class="room-status">
+                            <div class="status-item">
+                                <span class="status-label">Occupied</span>
+                                <span class="status-value" id="occupiedRooms">0</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Available</span>
+                                <span class="status-value" id="availableRooms">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-panel">
+                        <h3>Financial Overview</h3>
+                        <div class="financial-status">
+                            <div class="status-item">
+                                <span class="status-label">Collected</span>
+                                <span class="status-value" id="collectedFees">Ugx0</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">Outstanding</span>
+                                <span class="status-value" id="outstandingFees">Ugx0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" id="addRoomBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Room
+                        </button>
+                        <button class="action-btn" id="manageAllotmentBtn">
+                            <i class="fas fa-edit"></i>
+                            Manage Allotment
+                        </button>
+                        <button class="action-btn" id="generateReportBtn">
+                            <i class="fas fa-file-alt"></i>
+                            Generate Fee Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Page -->
+            <div id="students" class="page-content">
+                <div class="page-header">
+                    <h2>Students Management</h2>
+                    <button class="btn-primary" id="addStudentFormBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Student
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Course</th>
+                                <th>Room</th>
+                                <th>Fee Status</th>
+                                <th>Year</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Staff Page -->
+            <div id="staff" class="page-content">
+                <div class="page-header">
+                    <h2>Staff Management</h2>
+                    <button class="btn-primary" id="addStaffFormBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Staff
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="staffTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffTableBody">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Rooms Page -->
+            <div id="rooms" class="page-content">
+                <div class="page-header">
+                    <h2>Room Management</h2>
+                    <button class="btn-primary" id="addRoomFormBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Room
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="roomsTable">
+                        <thead>
+                            <tr>
+                                <th>Room Number</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Occupants</th>
+                                <th>Block</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="roomsTableBody">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Other pages will be added similarly -->
+            <div id="fees" class="page-content">
+                <div class="page-header">
+                    <h2>Fee Management</h2>
+                    <button class="btn-primary" id="addFeeFormBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Fee
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="feesTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Fee Type</th>
+                                <th>Amount</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feesTableBody">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Placeholder for other pages -->
+            <div id="allocations" class="page-content">
+                <div class="page-header">
+                    <h2>Allocations</h2>
+                    <button class="btn-primary" id="addAllocationBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Allocation
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="allocationsTable">
+                        <thead>
+                            <tr>
+                                <th>Allocation ID</th>
+                                <th>Student</th>
+                                <th>Room</th>
+                                <th>Date Allocated</th>
+                                <th>Date Vacated</th>
+                                <th>Active</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allocationsTableBody">
+                            <!-- allocations rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="visitors" class="page-content">
+                <div class="page-header">
+                    <h2>Visitors</h2>
+                    <button class="btn-primary" id="addVisitorBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Visitor
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="visitorsTable">
+                        <thead>
+                            <tr>
+                                <th>Visitor ID</th>
+                                <th>Student</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Visit Date</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody id="visitorsTableBody">
+                            <!-- visitors rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="maintenance" class="page-content">
+                <div class="page-header">
+                    <h2>Maintenance</h2>
+                    <button class="btn-primary" id="addMaintenanceBtn">
+                        <i class="fas fa-plus"></i>
+                        New Request
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="maintenanceTable">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Room</th>
+                                <th>Handled By</th>
+                                <th>Request Date</th>
+                                <th>Status</th>
+                                <th>Completion Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="maintenanceTableBody">
+                            <!-- maintenance rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reports" class="page-content">
+                <div class="page-header">
+                    <h2>Report</h2>
+                    <div class="report-controls">
+                        <button class="btn-primary" id="refreshReportsBtn">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh Data
+                        </button>
+                        <button class="btn-secondary" id="exportReportsBtn">
+                            <i class="fas fa-download"></i>
+                            Export Reports
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Statistics -->
+                <div class="reports-summary">
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 id="summaryTotalStudents">0</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 id="summaryTotalRooms">0</h3>
+                            <p>Total Rooms</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 id="summaryOccupancyRate">0%</h3>
+                            <p>Occupancy Rate</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 id="summaryFeesCollected">Ugx0</h3>
+                            <p>Fees Collected</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <!-- Room Status Pie Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Room Status Distribution</h3>
+                            <div class="chart-controls">
+                                <button class="chart-toggle active" data-type="pie">Pie</button>
+                                <button class="chart-toggle" data-type="bar">Bar</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="roomStatusChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Fee Payment Status Line Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Fee Payment Status Trend</h3>
+                            <div class="chart-controls">
+                                <button class="chart-toggle active" data-type="line">Line</button>
+                                <button class="chart-toggle" data-type="bar">Bar</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="feePaymentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Student</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="addStudentForm" class="form">
+                <div class="form-group">
+                    <label for="studentName">Full Name</label>
+                    <input type="text" id="studentName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentEmail">Email</label>
+                    <input type="email" id="studentEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentPhone">Phone</label>
+                    <input type="tel" id="studentPhone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentDOB">Date of Birth</label>
+                    <input type="date" id="studentDOB" name="date_of_birth" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentGender">Gender</label>
+                    <select id="studentGender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                        <option value="O">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studentCourse">Course</label>
+                    <input type="text" id="studentCourse" name="course" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentYear">Year of Study</label>
+                    <select id="studentYear" name="year_of_study" required>
+                        <option value="">Select Year</option>
+                        <option value="1">First Year</option>
+                        <option value="2">Second Year</option>
+                        <option value="3">Third Year</option>
+                        <option value="4">Fourth Year</option>
+                        <option value="5">Fifth Year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="studentAllocate" name="allocate">
+                        Allocate to room now
+                    </label>
+                </div>
+
+                <div id="studentAllocationFields" style="display:none;">
+                    <div class="form-group">
+                        <label for="studentRoom">Room</label>
+                        <select id="studentRoom" name="room_id">
+                            <option value="">Select Room</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentAllocationDate">Date Allocated</label>
+                        <input type="date" id="studentAllocationDate" name="date_allocated">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelStudent">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div id="addStaffModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Staff</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="addStaffForm" class="form">
+                <div class="form-group">
+                    <label for="staffName">Full Name</label>
+                    <input type="text" id="staffName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffEmail">Email</label>
+                    <input type="email" id="staffEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffPhone">Phone</label>
+                    <input type="tel" id="staffPhone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffCategory">Category</label>
+                    <select id="staffCategory" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="ADMINISTRATIVE">Administrative</option>
+                        <option value="HOUSEKEEPING">Housekeeping</option>
+                        <option value="MAINTENANCE">Maintenance</option>
+                        <option value="KITCHEN">Kitchen</option>
+                        <option value="SECURITY">Security</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="staffRole">Role</label>
+                    <input type="text" id="staffRole" name="role" required>
+                </div>
+                <div class="form-group">
+                    <label for="staffSalary">Salary</label>
+                    <input type="number" id="staffSalary" name="salary" step="0.01" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelStaff">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Staff</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Room Modal -->
+    <div id="addRoomModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Room</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="addRoomForm" class="form">
+                <div class="form-group">
+                    <label for="roomNumber">Room Number</label>
+                    <input type="text" id="roomNumber" name="room_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="roomType">Room Type</label>
+                    <select id="roomType" name="room_type" required>
+                        <option value="">Select Type</option>
+                        <option value="SINGLE">Single</option>
+                        <option value="DOUBLE">Double</option>
+                        <option value="TRIPLE">Triple</option>
+                        <option value="QUAD">Quad</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="roomBlock">Block</label>
+                    <select id="roomBlock" name="block_id" required>
+                        <option value="">Select Block</option>
+                        <!-- Options will be loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="roomOccupants">Initial Occupants</label>
+                    <input type="number" id="roomOccupants" name="occupants" min="0" value="0">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelRoom">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Fee Modal -->
+    <div id="addFeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Fee</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="addFeeForm" class="form">
+                <div class="form-group">
+                    <label for="feeStudent">Student</label>
+                    <select id="feeStudent" name="student_id" required>
+                        <option value="">Select Student</option>
+                        <!-- Options will be loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="feeType">Fee Type</label>
+                    <select id="feeType" name="fee_type" required>
+                        <option value="">Select Type</option>
+                        <option value="ACCOMMODATION">Accommodation</option>
+                        <option value="MAINTENANCE">Maintenance</option>
+                        <option value="SECURITY">Security</option>
+                        <option value="UTILITIES">Utilities</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="feeAmount">Amount</label>
+                    <input type="number" id="feeAmount" name="amount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="feeDueDate">Due Date</label>
+                    <input type="date" id="feeDueDate" name="date_due" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelFee">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Fee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+        <!-- Add Allocation Modal -->
+        <div id="addAllocationModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add New Allocation</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <form id="addAllocationForm" class="form">
+                    <div class="form-group">
+                        <label for="allocationStudent">Student</label>
+                        <select id="allocationStudent" name="student_id" required>
+                            <option value="">Select Student</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="allocationRoom">Room</label>
+                        <select id="allocationRoom" name="room_id" required>
+                            <option value="">Select Room</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="allocationDate">Date Allocated</label>
+                        <input type="date" id="allocationDate" name="date_allocated" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelAllocation">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Allocation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Visitor Modal -->
+        <div id="addVisitorModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Visitor</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <form id="addVisitorForm" class="form">
+                    <div class="form-group">
+                        <label for="visitorStudent">Student</label>
+                        <select id="visitorStudent" name="student_id" required>
+                            <option value="">Select Student</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorName">Visitor Name</label>
+                        <input type="text" id="visitorName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorPhone">Phone</label>
+                        <input type="tel" id="visitorPhone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorDate">Visit Date</label>
+                        <input type="date" id="visitorDate" name="visit_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorPurpose">Purpose</label>
+                        <input type="text" id="visitorPurpose" name="purpose_of_visit">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelVisitor">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Visitor</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF and autotable for client-side PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="{% load static %}{% static 'js/script.js' %}"></script>
+</body>
+</html>
